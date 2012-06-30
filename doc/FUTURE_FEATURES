@@ -1,0 +1,15 @@
+FUTURE FEATURES, TODOs and IDEAS
+---------------------------
+
+- Add a printing footer
+- All processes should have a -h option.
+- There should be a script that you provide a path and it sets up the data for you (for analysis after running pronghorn)
+- There should be a way to save state between execution runs / across blocks. For example so a subcontractor can set a hint about a block which another sub contractor might use. 
+- We need a way to handle the more advanced carving techniques that include things like fragmentation
+- We need a way to distribute pronghorn across multiple boxes
+- We need a way to signal that we want a discovered file re carved. For example in the case that we find a disk image on a disk image. 
+- We need to implement the "brute force" option, where every sub contractor gets everything, and we don't discard results, to allow processing to occur down different "tracks"
+- Need to give compression the option to not cache really large files.
+- Add unicode processing.
+- It might be worthwhile having a contract flag along the lines of "contract_assume_file_complete". At the moment, it seems that people will often have to determine themselves if they have a complete file or if they may need to open the file along the lines of the filename-size. For example, when reading an OLE document, if it's a complete file you might just want to try fopen(file) if it's a rawmount fs, you might want to try and open file-size. Some of the time this will not matter, you just open file and seek. This might be merged into the feature regarding whether a file can be recarved or not.
+- The MCP Might need to respawn contractors if the last contractor in provides lots of new contracts. This is pretty unlikely, so it has been implemented yet.

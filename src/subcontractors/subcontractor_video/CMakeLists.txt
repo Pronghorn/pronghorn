@@ -1,0 +1,31 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+PROJECT(subcontractor_video)
+
+INCLUDE(FindPkgConfig)
+PKG_CHECK_MODULES(glib REQUIRED glib-2.0)
+PKG_CHECK_MODULES(avcodec REQUIRED libavcodec>=53.6.0)
+PKG_CHECK_MODULES(avformat REQUIRED libavformat>=53.17.0)
+PKG_CHECK_MODULES(avutil REQUIRED libavutil>=51.7.0)
+
+INCLUDE_DIRECTORIES(..)
+INCLUDE_DIRECTORIES(../../../include)
+INCLUDE_DIRECTORIES(${glib_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${avcodec_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${avformat_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${avutil_INCLUDE_DIRS})
+
+SET(src_files subcontractor_video.c ../subcontractor_helper.c)
+
+IF(COMPILE_AS_CXX)
+  SET_SOURCE_FILES_PROPERTIES(${src_files} PROPERTIES LANGUAGE CXX)
+ENDIF()
+
+ADD_EXECUTABLE(subcontractor_video ${src_files})
+TARGET_LINK_LIBRARIES(subcontractor_video glib-2.0)
+TARGET_LINK_LIBRARIES(subcontractor_video libpronghorn)
+TARGET_LINK_LIBRARIES(subcontractor_video ${avcodec_LIBRARIES})
+TARGET_LINK_LIBRARIES(subcontractor_video ${avformat_LIBRARIES})
+TARGET_LINK_LIBRARIES(subcontractor_video ${avutil_LIBRARIES})
+
+INSTALL(TARGETS subcontractor_video DESTINATION pronghorn/subcontractors PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+

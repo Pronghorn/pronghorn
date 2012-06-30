@@ -1,0 +1,8 @@
+[subcontractor_sleuth]
+
+# Processing a big FS can take a significant
+# amount of time.
+
+#subcontractor_timeout=600000
+subcontractor_timeout=-1
+

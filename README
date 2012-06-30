@@ -1,0 +1,162 @@
+Pronghorn
+
+A submission for the 2012 DRFWS Forensic Challenge by the Defence Signals Directorate (DSD) Australia.
+
+1. Warning
+2. About Pronghorn
+3. Usage
+4. Design
+5. Features and Limitations
+
+1. Warning
+
+#######################
+WARNING - DO NOT USE THIS CODE ON PRODUCTION SYSTEMS.
+#######################
+
+The supplied code is a prototype solution that is not guaranteed to be error free.
+
+Pronghorn makes extensive use of untrusted third party libraries. The efficacy of the code cannot be assured. The consequences of failure of the software include (but are not limited to)
+
+- Exploitation of the system (via a suitably crafted disk image being analysed)
+- Loss of files on the system the code is run on.
+
+DSD strongly encourages the use of safe computing practices, such as running code using accounts with limited privileges. For more examples please refer to DSD's list of Top 35 mitigation strategies http://dsd.gov.au/infosec/top35mitigationstrategies.htm
+
+######################
+
+2. About Pronghorn
+
+Pronghorn is a framework which analyses blocks of data by tying together multiple libraries and distributing processing across several submodules.
+
+It makes extensive use of the FUSE library to eliminate the need to duplicate data on the hard drive.
+
+Due to key architectural design choices Pronghorn is extremely resilient to external libraries crashing or failing to operate correctly. There are also mechanisms for the user to indicate that certain libraries are more, or less, trusted than other libraries.
+
+3. Usage
+
+Detailed install instructions are available in the INSTALL document.
+
+Once pronghorn is installed and running, invoking the pronghorn script should start up pronghorn. The main piece of information pronghorn needs to analyse an image is obviously the input file. In addition, the script has been created to closely mirror the requirements specified in http://www.dfrws.org/2012/challenge/, namely:
+
+pronghorn <target> <block size> <concurrency factor>
+
+There are a significant number of additional options that control the behaviour of pronghorn. These are documented in the pronghorn configuration file (installs to /etc/pronghorn/pronghorn.conf by default). Options can be specified either in the configuration file, or on the command line. An option in the config file is defined as being within an option group (e.g. [general]), and having a name. The same option on the command line is specified using -o <option group>.<option name>=<value>. So for example, to run pronghorn with debug logging enabled using the provided script, you might run:
+
+ pronghorn ./image.dd 512 8 -o general.log_verbosity=DEBUG
+
+In fact, under the hood, all options are passed using -o, so the above shell script actually runs a command that looks like this:
+
+ /path_to_pronghorn_executable/pronghorn -o general.input_file=./image.dd -o general.number_cores=8 -o general.block_size=512 -o general.log_verbosity=DEBUG
+
+(in addition to a few other options required like -o general.config_directory=/etc/pronghorn)
+
+Pronghorn will then run and start classifying.
+
+Note that based on the requirements, pronghorn will output a line for each block it classifies. For a large image with a block size set to 512, this could result in a LOT of output! The DFRWS challenge explains the output format, but essentially pronghorn is focused on data contained within other data, so a result of PDF-(JPG ZLIB-(TEXT)) shows that within a PDF, pronghorn found a JPEG and some ZLIB encoded data, and within the ZLIB encoded data, it found some text. You can try setting -o general.output_style=1 for an alternate, less verbose output format.
+
+4. Design
+
+Pronghorn is focused on a few key design ideas intended to advance the start of carving. Some of these ideas include:
+
++ Lots of FUSE
+
+Based on the challenge description, it was decided that a key focus of the tool should be the ability to handle “nested” data. Since it was also stated that large disk images would be used for testing, it was decided that a key design goal would be the ability for pronghorn to process nested data without the unnecessary extraction and/or copying of large amounts of data. The solution chosen was to make extensive use of FUSE.
+
+In pronghorn, almost everything relies on FUSE. This starts at the lowest level - when carving the raw source image. The image is actually mounted using a custom FUSE process, which allows any process on the system to access any offset as simply as accessing a normal file.
+
+When pronghorn processes an image (let’s call it image.dd), it first mounts it using the pronghorn “rawmount” process. If we assume the mount point is /tmp/image (it is configurable and happens in the pronghorn working directory), from this point on you can access arbitrary offsets (and sizes) by simply requesting a file. Opening the file /tmp/image/0 will provide a file view into the raw data that starts at offset 0, and continues until the end of the raw data image. Opening a file called /tmp/image/1024-512 will present you with a file that starts at offset 1024 into the raw image, and is 512 bytes in length. This is very handy - almost any library or application can open a file - the pronghorn fuse mount process allows an arbitrary offset and size in the raw image to appear as a regular file.
+
+The fuse concept extends “higher” up the processing tree. Higher level formats such as ZIP, OLE, PDF, JPEGs (and even file systems!!) have all had FUSE subsystems implemented for them in pronghorn. Following the example above, let’s assume we find a zip file at offset 1024 (which can be accessed at /tmp/image/1024) which has two files in it. One option would be to extract these two files to let other processes / libraries / classifiers handle them. Instead, we fuse mount this zip file, and provide a view of the two underlying, uncompressed files, again accessible as a regular file. This next feature explains this in more detail.
+
++ Everything is just a path
+
+Due to pronghorn’s heavy use of FUSE, an exceptionally powerful model of processing nested data emerges. Since pronghorn can “mount” raw images, file systems, PDFs, etc, the underlying data can be processed without copying data (to disk), and this underlying data can be accessed / opened opened by simply opening a file at a given path.
+
+The following is an example of the type of path and classification that pronghorn may discover during processing:
+
+/tmp/fuse_mp/0:mnt-fat12/201:mnt-zip/4:mnt-pdf/5   (JPEG Image)
+
+The above path provides a view of an actual file (“5”) identified as a JPEG, which you can read, copy, or just view using a normal library or image viewing application. What is actually happening under the hood of pronghorn is a number of nested FUSE mounts, namely:
+
+- The raw data has been “mounted” using the pronghorn rawmount proces. As such, a file at offset 0 is presented to the user and O/S.
+- This file (/tmp/fuse_mp/0) has been determined to be a FAT12 file system.
+- Another pronghorn FUSE mount process (the sleuthkit based pronghorn fuse mount process) has then mounted the file and itself presented a different view of the data, namely presenting files that represent inodes within the FS.
+- One of these files (/tmp/fuse_mp/0:mnt-fat12/201 has been detected as a zip file. Another pronghorn mount process (the libarchive based pronghorn fuse mount) has then mounted this file, and exposed the contents, again as a fuse file system.
+- This file (/tmp/fuse_mp/0:mnt-fat12/201:mnt-zip/4 has then been detected as a PDF. This file has then been mounted using another pronghorn mount process (a PDF fuser mounter that uses the poppler library) and exposed the streams of the PDF as files.
+- Finally, the image analyser has determined that the file /tmp/fuse_mp/0:mnt-fast12/201:mnt-zip/4:mnt-pdf/5 is a jpeg.
+
+The original intention was to leave all these mounted following analysis to allow for the exploration of data. While this is possible, due to potential exhaustion of system resources, pronghorn unmounts files as they are no longer required for analysis. The test harness will allow you to mount a file and keep it mounted, however only for a single layer of FUSE mounts. It is intended that in the future, a program/script will be written that will allow a path like the one above to be remounted following analysis by simply providing the path.
+
++ Processes will crash
+
+Pronghorn provides a transport mechanism (currently zeromq and protobufs, but early prototypes used JSON and zeromq) that allows easy communication between processes. The use of completely separate processes (as opposed to a threading model) allows resilience within the framework when things break. A third party library used against corrupted input data may well crash. In pronghorn, processing occurs in a separate and unique process, and the framework will realise when worker processes have crashed, and restart them if and when required. The use of a transport (zeromq) that includes queuing allows for concurrency to be obtained simply - more processes are spawned; all of these request jobs from a single queue. Pronghorn scales easily across a large number of cores, and shows resilience (noting it’s an early prototype) if the actual classifier components crash.
+
+In addition, instead of crashing some processes may deadlock, enter infinite loops, or start consuming massive amounts of resources (memory, disk space). Pronghorn has configuration options which can be applied on a per process basis to limit the amount of resources it may consume. If a worker process is found to occasionally behave abnormally these configuration options will allow the user to handle these edge cases correctly.
+
++ Some helpful terminology
+
+The pronghorn design uses terminology designed to convey the overall framework. For a full understanding of the framework, you will need to dive into the code, but a short overview is included here.
+
+Everything in pronghorn is single threaded, there are just lots of processes. This can make things a little confusing at first, but it provides some significant benefits. Walking through some of these processes give an understanding of the design.
+
+Firstly, there are a couple of helper processes. This includes a log server (responsible for just receiving messages and printing them), and a config server (responsible for answering requests for config options, and also spawning the main controller program (MCP)).
+
+The MCPs job is to find new “contracts” for people to work on. A contract is basically a piece of data we want to classify. In actual fact, a contract is basically a path, since using the fuse and path based approach, all data is represented by a path. The MCP hands out these contracts (it also does a very basic first look at the data to try and guess which classifiers might be interested in it), waits for results back, and prints out the results when appropriate (it turns out this isn’t trivial if you want the results in order with a high concurrency factor!!).
+
+So if the MCP is just handing out contracts, who is taking them from the MCP? This falls to the contractors - they ask for jobs from the MCP and provide their results back to it when done. This is where concurrency in pronghorn occurs. When you ask for high concurrency factors, the MCP just spawns more contractors (and hopes it can hand out contracts fast enough!).
+
+So once a contractor has received a contract, it is expected to process it. In order to create a resilient design the contractor hands out the contract to “sub-contractors” it thinks might be able to work on the data. These “sub-contractors” are the actual things that do the work. They try and classify the data, and if it’s a container, FUSE mount the file and present new files / children using FUSE. Since these sub contractors (currently) tend to wrap third party libraries, they are also the ones most likely to crash, hang, or time out. The contractor is responsible for managing these potentially unwieldy sub contractors.
+
+Finally, to wrap this all together and provide a mechanism for the central storage of configuration options the ‘pronghorn’ process is the parent for the MCP and the logserver, and acts as the configuration server for all processes underneath it. This allows a high level of design flexibility. For example, when spawning processes, the new parent queries the user-provided restrictions of the process being spawned. If the user has specified that process “foo” should be restricted to only using 1Gb of memory then whenever a process with the name of “foo” is spawned a configuration lookup will reveal this information and restrict the process specifically. In addition, options like valgrinding specific processes are handled centrally, enabling simpler testing and debugging (more detail is provided in the features section).
+
+In summary:
+- Pronghorn spawns the log server and the MCP.
+- The MCP creates a contract that contains a path to some data.
+- It hands the contract to a contractor for processing.
+- The contractor decides which subcontractors could potentially process the data, and passes the contract to them
+- Subcontractors try to classify the data, and extract any new data they can find
+- The results go back to the contractor who determines which result is the most likely to be correct (via an internal scoring mechanism using ‘confidence’ values provided by the subcontractors)
+- The contractor sends the final result to the MCP who handles the printing, and the handing back out of any new contracts.
+
++ Use of third party libraries
+
+While writing custom carvers provides the opportunity to handle cases that regular file libraries were not designed for, it also imposes a large burden on analysts. Any new format to be supported may require extensive development to “understand” the format. Pronghorn relies on third party libraries (although future features include implementing more advanced carvers) to get large file format coverage with less development. This combined with the “fuse” and “path” concepts enable easy integration with external libraries, even if they were never intended to be used in such a framework.
+
+5. Features and Limitations
+
+Features
+
+Pronghorn is highly scalable, with the potential in future to scale across multiple boxes. It uses FUSE to present data in a way that allows powerful nested analysis (and in the future follow on analysis).
+
+By using third party libraries and multiple processes, pronghorn achieves resilience while gaining the benefit of third party libraries.
+
+Adding a new sub contractor is relatively straightforward for those with a knowledge of C. While they have not yet been implemented, it would be simple to implement a subcontractor that looked for keywords or patterns (email addresses, web links, etc). Such a tool would then inherit the benefit of the other modules, potentially finding data nested several levels deep.
+
+The configuration framework allows the user to specify options that affect only a subset of pronghorn processes. This is because the group name specifies the process that is affected by that option. When a process looks up a configuration option the default behaviour is:
+- Match on any configuration options that have group matching my PID
+- Match on any configuration options that have group matching my process name
+- Match [general]
+
+With this design it’s possible to change the verbosity of specific processes, ie
+general.log_verbosity=ERROR
+subcontractor_sleuth.log_verbosity=DEBUG
+
+Will force subcontractor_sleuth to output a full set of DEBUG messages, while reducing the messages from all other processes.
+Also, when coupled with valgrind this allows a developer to valgrind check their specific process by using
+subcontractor_sleuth.valgrind_opts=/usr/bin/valgrind,--log-file=/tmp/val.log
+
+Note that due to this flexibility there is no sanity checking done on configuration options. So mistyping valgrind_opts to valgrind_opt would be accepted by the framework and would have no effect on any process.
+
+Limitations
+
+As pronghorn is a prototype, it suffers some limitations. At present it relies on having the beginning portion of a file in order for it to have a chance of identifying it correctly. Starting from the middle of the file is likely to lead to a misdiagnosis.
+
+There is no easy way at present to mount a given path following a pronghorn run. It was always intended there would be an easy mechanism to provide a path and have pronghorn remount it following analysis. For smaller images, it is possible to modify the behaviour of pronghorn to simply not unmount anything, however due to possible resource exhaustion this is not enabled.
+
+At present, it’s not a simple task to run two instances of pronghorn at the same time on the same machine, because configuration options for the queues are set in the config file. The eventual intention will be to have pronghorn auto-select transport queues, and have options only for the specific case of running pronghorn across multiple machines.
+
+At present, pronghorn doesn’t correctly support NTFS alternate data streams. This is because the fuse representation of the files on the filesystem uses ID number rather than names - and currently the TSK subcontractor uses the file’s inode number as its ID number. It was determined that keeping the inode number was probably a good feature, so the decision was made to drop ADS for the time being until the framework was upgraded.
+
+Since pronghorn is prototype software, many of the sub contractors (both in terms of classifiers and fuse mounting) require more testing and development. A significant amount of development time was spent on the framework, probably at the expense of the subcontractors. Above all, it is a prototype, and requires extensive testing (and ideally input from the community) to progress the concept.
+

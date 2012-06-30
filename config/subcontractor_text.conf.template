@@ -1,0 +1,19 @@
+[subcontractor_text]
+# Default:
+# min_text_length=32
+min_text_length=32
+max_text_length=104857600
+max_csv_lines=50
+
+html_threshold = 50
+xml_threshold = 50
+css_threshold = 50
+json_threshold = 50
+base64_threshold = 50
+base85_threshold = 50
+hex_threshold = 50
+csv_threshold = 50
+js_threshold = 50
+log_threshold = 50
+txt_threshold = 50
+

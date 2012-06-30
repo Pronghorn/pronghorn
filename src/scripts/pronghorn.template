@@ -1,0 +1,39 @@
+#!/bin/bash
+
+die () {
+    #echo >&2 "$@"
+		echo "At least two arguments (input file and block_size) required"
+		echo "Usage:"
+		echo "`basename $0` file block_size [concurrency_factor] [-o group.option=value -o group2.option2=value2 ... ]" 
+		echo ""
+		echo "Example:"
+		echo "`basename $0` ./file_to_classify.dd 512 4 -o general.log_verbosity=DEBUG"
+		echo ""
+    exit 1
+}
+
+[ "$#" -gt 1 ] || die 
+
+INPUT_FILE=$1
+shift
+
+BLOCK_SIZE=$1
+shift
+
+if(( "$#" ))
+then
+    NUM_CORES=$1
+    shift
+    
+    ( [ "x$NUM_CORES" != "x-o" ] && [ "$NUM_CORES -gt 0" ] && [ "$NUM_CORES" -lt 100000 ] ) || (echo "Invalid concurrency_factor $NUM_CORES"; echo "Please provide a concurrency factor before providing other options"; echo ""; die)
+
+else
+    NUM_CORES=`cat /proc/cpuinfo 2> /dev/null | grep processor | wc -l`
+    [ "$NUM_CORES" -gt 0 ] || NUM_CORES=1
+fi
+
+ERROR_FILE=pronghorn.log
+
+echo "A log file will be created at '$ERROR_FILE'"
+
+@CMAKE_INSTALL_PREFIX@/pronghorn/pronghorn -o general.config_directory=@PRONGHORN_CONFIG_DIRECTORY@ -o general.input_file=${INPUT_FILE} -o general.number_cores=${NUM_CORES} -o general.block_size=${BLOCK_SIZE} $@ 2>$ERROR_FILE

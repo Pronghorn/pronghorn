@@ -1,0 +1,7 @@
+[subcontractor_compression]
+
+# Decompressing large files can take a significant
+# amount of time.
+
+subcontractor_timeout=600000
+

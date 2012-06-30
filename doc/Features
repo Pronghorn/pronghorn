@@ -1,0 +1,12 @@
+Features of Pronghorn
+
+- If left mounted, can view files deeply
+- Upgrades on run - Can replace crashing subcontractor with freshly compiled (probably not a feature)
+- Custom modules to run across data (keyword scanning? password guessing?)
+- Robust framework
+- Unlimited recursion
+- Rawmount
+- Future: Theoretically scalable across network
+- Future: Multiple pronghorns 
+- Future: NTFS ADS support
+

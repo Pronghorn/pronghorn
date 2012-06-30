@@ -1,0 +1,27 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+PROJECT(subcontractor_text)
+
+PKG_CHECK_MODULES(gsl REQUIRED gsl>=1.14)
+
+INCLUDE_DIRECTORIES(../../../include)
+INCLUDE_DIRECTORIES(..)
+INCLUDE_DIRECTORIES(${gsl_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${glib_INCLUDE_DIRS})
+
+LINK_DIRECTORIES(${gsl_LIBRARY_DIRS})
+LINK_DIRECTORIES(${glib_LIBRARY_DIRS})
+
+SET(src_files subcontractor_text.c text_helper.c ascii85.c ../subcontractor_helper.c)
+
+IF(COMPILE_AS_CXX)
+  SET_SOURCE_FILES_PROPERTIES(${src_files} PROPERTIES LANGUAGE CXX)
+ENDIF()
+
+ADD_EXECUTABLE(subcontractor_text ${src_files})
+TARGET_LINK_LIBRARIES(subcontractor_text glib-2.0)
+TARGET_LINK_LIBRARIES(subcontractor_text libpronghorn)
+TARGET_LINK_LIBRARIES(subcontractor_text gsl)
+TARGET_LINK_LIBRARIES(subcontractor_text gslcblas)
+
+INSTALL(TARGETS subcontractor_text DESTINATION pronghorn/subcontractors PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+

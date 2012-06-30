@@ -1,0 +1,8 @@
+KNOWN ISSUES
+---------------
+
+- Subcontractor_sleuth doesn't handle relative paths properly (should only be an issue in the test haress)
+- Working directory must be fully qualified or bad things will probably happen
+- Build artifcats and executables should go into a seperate build directory. This prevents us from having to add every subcontractor pe to .gitignore.
+- Need to ensure the tests are better updated and included in the build system properly
+- There may be a speed hit with regards to using blocks not absolute offets in parts of the code - it is worth looking into this more, and working out what is actually the best performance wise (or storing both?)

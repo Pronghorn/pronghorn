@@ -1,0 +1,22 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+PROJECT(mcp)
+
+INCLUDE_DIRECTORIES(../../include)
+INCLUDE_DIRECTORIES(${glib_INCLUDE_DIRS})
+
+LINK_DIRECTORIES(${glib_LIBRARY_DIRS})
+
+SET(CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} "-g -Wall -std=c99 -pedantic ")
+
+SET(src_files mcp.c contractor_controller.c data_source.c block_storage.c file_manager.c job_node.c print_manager.c dfrws_print.c basic_print.c)
+
+IF(COMPILE_AS_CXX)
+  SET_SOURCE_FILES_PROPERTIES(${src_files} PROPERTIES LANGUAGE CXX)
+ENDIF()
+
+ADD_EXECUTABLE(mcp ${src_files})
+TARGET_LINK_LIBRARIES(mcp glib-2.0)
+TARGET_LINK_LIBRARIES(mcp libpronghorn)
+
+INSTALL(TARGETS mcp DESTINATION pronghorn PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+

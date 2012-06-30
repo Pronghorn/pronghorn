@@ -1,0 +1,34 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+PROJECT(subcontractor_image)
+
+INCLUDE(FindPkgConfig)
+
+PKG_CHECK_MODULES(MagickWand REQUIRED MagickWand) 
+PKG_CHECK_MODULES(MagickCore REQUIRED MagickCore) 
+
+INCLUDE_DIRECTORIES(../../../include)
+INCLUDE_DIRECTORIES(..)
+INCLUDE_DIRECTORIES(${glib_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${MagickWand_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${MagickCore_INCLUDE_DIRS})
+
+LINK_DIRECTORIES(${glib_LIBRARY_DIRS})
+LINK_DIRECTORIES(${MagickWand_LIBRARY_DIRS})
+LINK_DIRECTORIES(${MagickCore_LIBRARY_DIRS})
+
+SET(src_files subcontractor_image.c ../subcontractor_helper.c)
+
+IF(COMPILE_AS_CXX)
+  SET_SOURCE_FILES_PROPERTIES(${src_files} PROPERTIES LANGUAGE CXX)
+ENDIF()
+
+ADD_EXECUTABLE(subcontractor_image ${src_files})
+TARGET_LINK_LIBRARIES(subcontractor_image glib-2.0)
+TARGET_LINK_LIBRARIES(subcontractor_image MagickWand)
+TARGET_LINK_LIBRARIES(subcontractor_image libpronghorn)
+TARGET_LINK_LIBRARIES(subcontractor_image MagickCore)
+TARGET_LINK_LIBRARIES(subcontractor_image exif)
+TARGET_LINK_LIBRARIES(subcontractor_image m)
+
+INSTALL(TARGETS subcontractor_image DESTINATION pronghorn/subcontractors PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+

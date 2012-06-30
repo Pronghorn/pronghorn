@@ -1,0 +1,145 @@
+Contents
+==============
+1. Quick Start Guide (#QSG)
+2. Dependancies (#DEPS)
+   2.1 Base Pronghorn (#DBP)
+   2.2 Plugin Specific (#DPS)
+3. Building Pronghorn (#BPH)
+4. Notes (#NTE)
+
+============================
+1. Quick Start Guides (#QSG)
+============================
+
+Ubuntu 12.04 / Linux Mint 13 Maya
+---------------------------------
+
+From a clean install (correct as of 2012 Jun 4):
+
+# Install apt-gettable packages
+sudo apt-get install build-essential cmake libfuse-dev libglib2.0-dev uuid-dev libtsk-dev libmagickwand-dev libarchive-dev libpoppler-dev libpoppler-glib-dev libavcodec-dev libavformat-dev libgsl0-dev libprotobuf-c0-dev zlib1g zlib1g-dev
+
+# If you want to build documentation:
+sudo apt-get install doxygen
+
+# Install packages from source
+cd ~
+wget http://download.zeromq.org/zeromq-2.2.0.tar.gz
+tar -xzf zeromq-2.2.0.tar.gz 
+cd zeromq-2.2.0/
+./configure && make
+sudo make install
+
+# NB Ensure that your install path (/usr/local/lib) is in your 
+# /etc/ld.so.conf and you may need to run "sudo ldconfig"
+
+# Build pronghorn
+cmake .
+make
+make doc # (If you're building documentation)
+
+# Install pronghorn
+sudo make install
+
+# Configure FUSE
+sudo sed --in-place=.backup "s/#user_allow_other/user_allow_other/" /etc/fuse.conf
+sudo usermod --append --groups fuse $USER
+# NB You also may want to increase the number of allowed fuse mounts to something higher, 
+# depending on the images you are analysing. For example:
+# sudo sed --in-place=.backup "s/#mount_max.*$/mount_max=20000/" /etc/fuse.conf
+
+# Logout and back in
+sudo reboot
+
+# Run!
+pronghorn your_file block_size
+
+=======================
+2. Dependancies (#DEPS)
+=======================
+
+# First, install all the dependencies of pronghorn. It's recommended that you first apt-get install everything you can, and them move onto the source only packages.
+
+2.1 Base Pronghorn (#DBP)
+=========================
+
+# Apt-get installable:
+ - build-essential
+ - cmake
+ - libfuse-dev
+ - libglib2.0-dev (Probably >= 2.28)
+ - doxygen
+ - uuid-dev (required for zeromq)
+ - libprotobuf-c0-dev
+
+# From source:
+ - ZeroMQ v2.2.0+ (available from http://www.zeromq.org/area:download)
+
+2.2 Plugin Specific (#DPS)
+==========================
+
+subcontractor_sleuth
+--------------------
+# Apt-get installable:
+ - libtsk-dev (Though it's better to install the 4.0+ version - less leaks)
+
+subcontractor_image
+-------------------
+# Apt-get installable:
+ - libmagickwand-dev
+
+subcontractor_jbig
+-------------------
+ - JBig-Kit (included)
+
+subcontractor_compression
+-------------------------
+# Apt-get installable:
+ - libarchive-dev (Probably > 2.8.5, tested with 3.0.3)
+
+subcontractor_pdf
+-----------------
+# Apt-get installable:
+ - libpoppler-dev
+ - libpoppler-glib-dev
+
+subcontractor_video
+-------------------
+# Apt-get installable:
+ - libavcodec-dev
+ - libavformat-dev
+
+subcontractor_text
+------------------
+ - libgsl0-dev
+
+subcontractor_zlib
+------------------
+ - zlib1g-dev
+
+
+============================
+3. Building Pronghorn (#BPH)
+============================
+cd pronghorn
+cmake .
+make
+sudo make install
+(and optionally make doc)
+
+===============
+4. Notes (#NTE)
+===============
+
+Valgrind
+--------
+For running valgrind, see: live.gnome.org/Valgrind. This usually involves running something like this: G_SLICE=always-malloc G_DEBUG=gc-friendly,resident-modules valgrind --leak-check=full ./your_application. Although note that this still has produced issues, especially with the g_config stuff. Also, pronghorn now has a system whereby it makes running plugins under valgrind far simpler and is user configurable. See pronghorn.conf for more information
+
+ZeroMQ and Sleuthkit Installation
+---------------------------------
+Note that by default, zmq and Sleuthkit are in /usr/local, which can sometimes cause run time issues if you haven't setup your LD path correctly. You can set you LD_LIBRARY_PATH to include /usr/local to resolve this issues, or some people prefer to just specifiy a cofigure prefix of /usr. You could put the following in your bashrc : export LD_LIBRARY_PATH=/usr/local/lib, or run the program in question using LD_LIBRARY_PATH=/usr/local/lib ./application_you_are_running, or setup your /etc/ld.so.conf.d/ correctly.
+
+Extra Packages
+--------------
+On some systems (like lubuntu?) the pkg-config package isn't installed. You will need to install it
+

@@ -1,0 +1,346 @@
+##
+## The pronghorn configuration file.
+##
+# Any option in this file can be specified on the command line
+# using -o <group>.<option>=<value> when running pronghorn.
+#
+# While it may look a little daunting, in reality you will not have 
+# to modify many of these options. Note that in general you can 
+# specify all options in either the "general" section, or in module 
+# specific sections. For example, setting log_verbosity = DEBUG in 
+# [general] affects all processes within pronghorn (setting their 
+# log verbosity to debug). Setting log_verbosity = DEBUG in [mcp] sets 
+# it only for the MCP. Also note that pronghorn searches for multiple
+# config files in the directory. So, if you are unsure why a setting in
+# here is being overwritten, check it doesn't exist in other config files.
+
+[general]
+
+#
+# Paths
+# 
+
+# The pronghorn install directory. This can be used as a variable,
+# for example in specifying the path to the sub contractors. So
+# if you don't want to actually install pronghorn, just set this
+# value to where you have compiled it. There is no default value.
+# Default:
+# NONE
+install_dir = @CMAKE_INSTALL_PREFIX@/pronghorn
+
+# The pronghorn config directory. This can be a directory
+# containing multiple files. They will be read and merged
+# Default:
+# config_directory = @PRONGHORN_CONFIG_DIRECTORY@
+
+# The path to the log server executable. Since pronghorn
+# is distributed across multiple processes, a centralised
+# logging server is used to enable consistent logging. It
+# listens on a queue and prints information sent to it.
+# Default:
+# logserver
+logserver_executable = ${install_dir}/logserver
+
+# The path to the MCP executable. Pronghorn starts this
+# up and the MCP does general shuffling around of work 
+# packages, and printing output etc. 
+# Default:
+# mcp
+mcp_executable = ${install_dir}/mcp
+
+# In pronghorn, the work is actually handed out to 
+# "contractors". This is where the concurrency occurs
+# as a number of contractors will be spawned and 
+# controlled by the MCP. This options sets the path to
+# the contractors. 
+# Default:
+# contractor
+contractor_executable = ${install_dir}/contractor
+
+# Much of pronghorn is based around the concept of 
+# fuse mounting. The rawmount executable is the
+# "base" fuse mount - we mount the raw image
+# and then read from files at various offsets. This
+# option sets the path to this executable. 
+# Default:
+# rawmount
+rawmount_executable = ${install_dir}/rawmount
+
+# Since pronghorn ends up mounting lots of fuse mounts,
+# it is handy to have a script that unmounts all the fuse
+# mps below a certain point. This value points to the
+# unmount_all script to use. 
+# Default:
+# unmount_all
+unmount_all_script = ${install_dir}/unmount_all
+
+# Pronghorn automatically looks for all the subcontractors
+# it can find and uses them. This option specifies where it 
+# should look for subcontractors.
+# Default:
+# NONE
+subcontractor_directories = ${install_dir}/subcontractors
+
+# Pronghorn uses a working directory for its temp files and mounting 
+# file systems. This option allows you to specify it. Note that 
+# fuse mounting will occur in a sub directory - see the fuse_sub_dir option
+# NB MUST BE FULLY QUALIFIED
+# Default value:
+# working_dir = /tmp/
+
+# Within the working directory, pronghorn sets up a fuse filesystem which 
+# forms a large part of how the system works. This option specifies the name
+# of the fuse mount point, located within the working directory. e.g if 
+# your working directory is /foo/ and you set this to "bar", the fuse fs will
+# be mounted under "/foo/bar"
+# Default value:
+# fuse_sub_dir = fuse_mount
+
+#
+# General Settings
+#
+
+# The number of cores to try and use. Note that technically,
+# this isn't the actual number of cores. It's just how many
+# actual "contractors" we spawn, which tends to determine how
+# many simultaneous processes are processing data. 
+# Default value:
+# number_cores = 1
+
+# Block size to use when classifying input file. Often you will
+# specify this at run time. 
+# Default value:
+# block_size = 512
+
+# Which block to start at when classifying an input file. Note
+# that this is specified in blocks, so the actual starting offset will
+# be block_size * starting_block.
+# Default value:
+# starting_block = 0
+
+# The log verbosity to use. Valid options are DEBUG INFO WARN ERROR SEVERE
+# Default value:
+# log_verbosity = INFO
+
+#
+# Timeout settings
+#
+
+# How long is a subcontractor given (NB: in ms) to process a file. Note that this
+# applies globally, so only set this if you really want to sent it 
+# globally. It's probably better to set timeouts for contractors
+# based on their file types, and to do so in individual config files or
+# in their own section below. This value is how long a contractor
+# will wait for a subcontractor before killing it.
+# Default value:
+# subcontractor_timeout = 60000
+
+# How long is the config server timeout in ms.
+# Default value:
+# config_timeout = 15000
+
+# Duration of log message timeouts (in ms)
+# Default value:
+# log_send_timeout = 15000
+
+# How long will the MCP wait for a contractor (ms)
+# This needs to be low so the MCP doesn't wait around for shutdown contractors 
+# too long. The MCP will retry indefinitely, so this value is more about how 
+# often the MCP will retry recvs. If you want to change the "system" timeout, 
+# you should set the contractor time out below. If a contractor gives up, the MCP
+# will note this and shut things down.
+# Default value:
+# mcp_contractor_timeout = 1000
+
+# How long will a contractor wait for the MCP? (in ms)
+# -1 implies forever
+# Default value:
+# contractor_mcp_timeout = -1 
+
+# How many times will a contractor retry talking to the MCP?
+# Note the effect of this depends a lot on contractor_mcp_timeout.
+# In particular, if contractor_mcp_timeout == -1, this doesn't mean much.
+# Default value:
+# contractor_mcp_recv_retries = 50
+
+#
+# Subcontractor Settings
+#
+
+# Subcontractor confidence threshold
+# This specifies the minimum confidence a subcontractor must return to
+# have its result taken into consideration. Note that in general, it
+# makes far more sense for this value to be overwriten below on a per
+# subcontractor basis. 
+# Default value:
+# subcontractor_confidence_threshold = 50
+
+# Subcontractor precedence 
+# This specifies which sub contractor "wins". If two subcontractors both 
+# return results over their thresholds, then the one listed first here
+# will "win". In actual fact, sub contractors get asked to process things
+# in order of their precedence. If the highest one returns a result over
+# its threshold, processing stops.
+# Default value:
+# N/A
+# Example:
+subcontractor_precedence = subcontractor_sleuth,subcontractor_partitiontable,subcontractor_ole,subcontractor_pdf,subcontractor_compression, subcontractor_jbig,subcontractor_mp3,subcontractor_video,subcontractor_image, subcontractor_text
+
+# Brute force mode ( ** NYI ** ) ** NOT YET IMPLEMENTED **
+# This mode will force the MCP to send ALL blocks to ALL subcontractors 
+# (and, hence, skip the processing of each file with lightmagic)
+# Enabling this mode overrides any lightmagic types subcontractors request.
+# They simply get sent everything. 
+# Default value:
+# brute_force_mode = 0
+# Example:
+# brute_force_mode = 1
+
+#
+# Logging Settings
+#
+
+# Determines whether to append (1) or overwrite (0) to log files
+# Default value:
+# log_file_append = 0
+
+# The lines below allow you to redirect log output to files instead 
+# of stderr. NB You should not specify the same file name for more 
+# than one output level
+# Default values:
+# NONE
+# Examples:
+# log_general_output_file = pronghorn_log_general.txt
+# log_debug_output_file = pronghorn_log_debug.txt
+# log_info_output_file = pronghorn_log_info.txt
+# log_warning_output_file = pronghorn_log_warning.txt
+# log_error_output_file = pronghorn_log_error.txt
+# log_severe_output_file = pronghorn_log_severe.txt
+
+# Fuse debug logging. Since when a subcontractor forks
+# and serves up its fuse FS it can be hard to debug, this 
+# allows debugging to a file.
+# Default:
+# NONE (No logging)
+# Example:
+# fuse_debug_file = /tmp/fuse_dbg
+
+# Sometimes when debugging, if things are not behaving,
+# it can be useful to eliminate 0mq from the logging, and get
+# debug logs to std out. This option allows this by changing
+# the behaviour of the log server
+# Default:
+# NONE (Don't stderr log)
+# Example:
+# force_stderr_logging = 1
+
+#
+# Transport Settings
+#
+# Pronghorn currently uses zeromq for transport between processes.
+#
+
+# The address the config server should listen on.
+# Default value:
+# config_listen = tcp://127.0.0.1:6666
+
+# The address used to connect to the config server
+# Default value:
+# config_connect = tcp://localhost:6666
+
+# The address the log server should listen on.
+# Default value:
+# log_listen = tcp://0.0.0.0:5555
+
+# The address used to connect to the log server
+# Default value:
+# log_connect = tcp://127.0.0.1:5555
+
+
+# Address the MCP should listen on 
+# Default value:
+# mcp_transport_listen = tcp://127.0.0.1:4444
+
+# Address to connect to the mcp on
+# Default value:
+# mcp_transport_connect = tcp://127.0.0.1:4444
+
+#
+# Other Options
+#
+
+# Allows you to selectively valgrind components of pronghorn. For example, the
+# below line will valgrind EVERY process in pronghorn using the specified options.
+# You almost certainly want to do this against a specific process (e.g. mcp, contractor)
+# which you can do by putting the option in a specific section below.
+#
+# Another thing to be aware of is that you need to fully qualify the valgrind 
+# executable, and you need to ensure these options are set in your environment:
+# G_SLICE=always-malloc G_DEBUG=gc-friendly,resident-modules 
+# as per http://live.gnome.org/Valgrind
+#
+# Default value:
+# NONE
+# Example:
+# valgrind_opts = /usr/bin/valgrind,--leak-check=full,--log_file=valgrind_log_%p
+
+# Allow limiting of resource usage on spawned processes. This would 
+# normally be used for misbehaving subcontractors. As such,
+# you would normally set this per sub contractor / process, not in 
+# the general section here.
+
+# Mem limit - The maximum size of the process's virtual memory (address space) in bytes.
+# Default value:
+# NONE (unlimited)
+# Example:
+# mem_limit = 2000000000
+
+# Disk limit - The maximum size of files that the process may create.  
+# Default value:
+# NONE (unlimited)
+# Example:
+# disk_limit = 20000000
+
+# Proc limit - CPU time limit in seconds.  When the process reaches the soft limit, 
+# it is sent a SIGXCPU signal.  The default action for this signal is to terminate the process.
+# Default value:
+# NONE (unlimited)
+# Example:
+# proc_limit = 120
+
+# If you are creating a fuse sub system with a massive number of children, this option
+# prevents directory listings from occuring
+# Default value:
+# NONE (allow dir listings)
+# Example:
+# fuse_no_dir_listing=1
+
+# Option for the maximum number of nodes that the MCP will allow in its job 
+# tracking tree before it starts to tell contractors to wait. 
+# Default value:
+# mcp_max_tree_nodes=10000
+
+# How long (in ms) the MCP should tell contractors to wait when the MCP tree starts becoming too full
+# Default value:
+# mcp_full_tree_wait=5000
+
+# The output style 
+# Options are : 
+# 0 - DFRWS Output Style
+# 1 - Basic Output Style
+# Default value:
+# output_style=0
+
+#
+# Process Specific Options
+#
+
+[contractor]
+
+#valgrind_opts = /usr/bin/valgrind,--leak-check=full
+
+[mcp]
+
+#valgrind_opts = /usr/bin/valgrind,--leak-check=full
+
+

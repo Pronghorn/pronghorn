@@ -1,0 +1,13 @@
+#! /bin/bash
+
+if [ $# != 1 ]
+then
+	echo "Usage $0 <mountpoint>"
+	echo "Recursively reverse mounts all mountpoints from the specified mountpoint"
+	exit 0
+fi
+
+MOUNTPOINT=$(readlink -f $1)
+
+cat /proc/mounts | awk '{print $2}' | grep "^$MOUNTPOINT" | sort -r | xargs --no-run-if-empty -n1 fusermount -zu 2>/dev/null
+

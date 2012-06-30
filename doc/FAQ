@@ -1,0 +1,59 @@
+FAQ
+
+---
+
+Why does the MCP perform the light magic, wouldn't it be better multithreaded in the contractors?
+
+It was initially thought that because it may be expensive to open and close files and lightmagic is quite efficient, it would be better to do it centrally. If benchmarking suggests this is a false assumption, there is no reason it couldn't occur in the contractors. It would then be performed in parallel. 
+
+One nice thing about it being in the MCP is that if we find a long string of constants, we can avoid even handling them out for processing.
+
+---
+
+Why don't discovered files get carved, for example a DD sitting on someone's desktop?
+
+All discovered files are treated equally and it makes more sense to parse these are their types than recarving them all. In the event we find a DD, we assume we would likely have a file system, or at least a partition table. We therefore treat this the same way as other files. (.e.g. a registry hive - it doesn't make sense to carve most "files"). In some cases, this isn't ideal. For example, pronghorn may process a zipped disk image without a file system present. In this case, the zip would be correctly handled, but the disk image would be treated as a single file and not carved. It might make sense later to add the ability to request discovered files be carved.
+
+---
+
+What will a subcontractor actually recieve?
+
+A subcontract will receive a "contract". This contract basically has a path to a file the subcontractor is expected to work on. In the case of carving, it will receive a path to a file it can open as a regular file which is transparently actually raw blocks off disk. The subcontractor should do as best it can to process this file and identify it.
+
+---
+
+What are these left over mount points? What are these left over IPC end points?
+
+Pronghorn tries to do its best to clean up, but it's possible mount points may be left over, especially on non graceful exits. There is an unmount all script which might be of assistance.
+
+---
+
+What coding styles should I use?
+
+Use curly braces on new line, no spaces around brackets
+
+if(foo) 
+{
+
+}
+
+Doxygen, use slashes, not at symbols:
+
+/**
+ * \keyword
+ * 
+ */
+
+Don't use glib types unless necessary gint int not gint, char* not gchar* etc
+
+Use c style naming - a_variable 
+
+Expand tabs = YES (Use actual tabs)
+Tabstops = 2
+
+---
+
+Where can I find information about libtool?
+
+This page was very helpful:
+http://web.mit.edu/gnu/doc/html/libtool.html

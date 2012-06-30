@@ -1,0 +1,15 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+PROJECT(pronghorn)
+
+# Adding all submodules
+ADD_SUBDIRECTORY(3rd_party_libjbig)
+ADD_SUBDIRECTORY(libpronghorn)
+ADD_SUBDIRECTORY(pronghorn)
+ADD_SUBDIRECTORY(contractor)
+ADD_SUBDIRECTORY(subcontractors)
+ADD_SUBDIRECTORY(logserver)
+ADD_SUBDIRECTORY(rawmount)
+ADD_SUBDIRECTORY(mcp)
+ADD_SUBDIRECTORY(examples)
+ADD_SUBDIRECTORY(scripts)
+

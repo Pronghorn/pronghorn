@@ -1,0 +1,4 @@
+#! /bin/bash
+
+indent -bad -bap -bbo -nbc -ncdb -cli0 -cs -d0 -nfc1 -nfca -hnl -ip0 -lp -npcs -nprs -npsl -saf -sai -saw -nsc -nsob -nss -i2 -nut -bl -bli0 -l200 -bls -ce $@
+
