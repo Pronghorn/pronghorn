@@ -57,7 +57,7 @@ Note that based on the requirements, pronghorn will output a line for each block
 
 4. Design
 
-Pronghorn is focused on a few key design ideas intended to advance the start of carving. Some of these ideas include:
+Pronghorn is focused on a few key design ideas intended to advance the state of carving. Some of these ideas include:
 
 + Lots of FUSE
 
@@ -156,7 +156,7 @@ There is no easy way at present to mount a given path following a pronghorn run.
 
 At present, it’s not a simple task to run two instances of pronghorn at the same time on the same machine, because configuration options for the queues are set in the config file. The eventual intention will be to have pronghorn auto-select transport queues, and have options only for the specific case of running pronghorn across multiple machines.
 
-At present, pronghorn doesn’t correctly support NTFS alternate data streams. This is because the fuse representation of the files on the filesystem uses ID number rather than names - and currently the TSK subcontractor uses the file’s inode number as its ID number. It was determined that keeping the inode number was probably a good feature, so the decision was made to drop ADS for the time being until the framework was upgraded.
+At present, pronghorn doesn’t correctly support NTFS alternate data streams. This is because the fuse representation of the files on the filesystem uses ID number rather than names - and currently the file system subcontractor uses the file’s inode number as its ID number. It was determined that keeping the inode number was probably a good feature, so the decision was made to drop ADS for the time being until the framework was upgraded. The subcontractor (through the sleuthkit) can find them, the framework just needs a better way to represent them.
 
 Since pronghorn is prototype software, many of the sub contractors (both in terms of classifiers and fuse mounting) require more testing and development. A significant amount of development time was spent on the framework, probably at the expense of the subcontractors. Above all, it is a prototype, and requires extensive testing (and ideally input from the community) to progress the concept.
 
