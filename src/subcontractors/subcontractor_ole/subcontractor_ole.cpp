@@ -197,10 +197,8 @@ int analyse_contract(contract_t to_analyse, contract_completion_report_t ccr)
 	g_storage = new POLE::Storage(path);
 
 	result_t result;
-	int num_types = 0;
 	int ret = 0;
 	unsigned int file_count = 0;
-	const int *types = NULL;
 	int contiguous = 0;
 	int offset = 0;
 	block_range_t *ranges;
@@ -211,7 +209,6 @@ int analyse_contract(contract_t to_analyse, contract_completion_report_t ccr)
 	g_mountpoint = g_mountpoint + ":mnt-ole";
 
 	/* Get the required information from the contract */
-	types = contract_get_types(to_analyse, &num_types);
 	contiguous = contract_is_contiguous(to_analyse);
 	offset = contract_get_absolute_offset(to_analyse);
 
@@ -251,7 +248,7 @@ int analyse_contract(contract_t to_analyse, contract_completion_report_t ccr)
 					return -1;
 				}
 
-        for (int i = 0; i < num_ranges; i++)
+        for (unsigned int i = 0; i < num_ranges; i++)
         {
           block_range_close(ranges[i]);
         }
