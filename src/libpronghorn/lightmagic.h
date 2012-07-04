@@ -204,7 +204,7 @@ const char *lightmagic_text_representation(unsigned int code) G_GNUC_WARN_UNUSED
  * \param text_representation The text to convert into a type code.
  * \returns The data type code.
  */
-const unsigned int lightmagic_int_value(const char *text_representation) G_GNUC_WARN_UNUSED_RESULT;
+unsigned int lightmagic_int_value(const char *text_representation) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * A helper function as g_array_append_val is a macro that requires a

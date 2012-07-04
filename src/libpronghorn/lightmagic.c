@@ -721,7 +721,7 @@ const char *lightmagic_text_representation(unsigned int code)
   return __lightmagic_lookup_name(code, text_descriptive_names);
 }
 
-const unsigned int lightmagic_int_value(const char *text_representation)
+unsigned int lightmagic_int_value(const char *text_representation)
 {
   if (!strcasecmp(text_representation, "MAGIC_TYPE_TEXT"))
     return MAGIC_TYPE_TEXT;

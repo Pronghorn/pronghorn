@@ -153,7 +153,7 @@ const char *transport_recv(transport_t transport, volatile sig_atomic_t * pid, u
  * \param rx_data_size Returns the size of the received buffer
  * \return The buffer received, or NULL on error.
  */
-const char *transport_sendrecv(transport_t transport, const char *const tx_data, const unsigned int tx_data_size, volatile sig_atomic_t * pid, unsigned int *rx_data_size) G_GNUC_WARN_UNUSED_RESULT;
+const char *transport_sendrecv(transport_t transport, const char *const tx_data, unsigned int tx_data_size, volatile sig_atomic_t * pid, unsigned int *rx_data_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Closes the transport layer.

@@ -47,7 +47,7 @@ typedef struct contract* contract_t;
  * \param initial_values_size the size of the initial_values_buffer
  * \returns an initialised contract_t reference or NULL on error
  */
-contract_t contract_init(const char *initial_values, const unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
+contract_t contract_init(const char *initial_values, unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Returns the contract reference as a serialised buffer.

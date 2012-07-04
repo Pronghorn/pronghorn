@@ -54,7 +54,7 @@ typedef struct result* result_t;
  * \param initial_values_size the size of the initial_values_buffer
  * \returns an initialised result_t reference or NULL on error
  */
-result_t result_init(const char *initial_values, const unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
+result_t result_init(const char *initial_values, unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Returns the result reference as a serialised buffer.
@@ -155,7 +155,7 @@ int result_set_brief_data_description(result_t r, const char *brief_data_descrip
  * \param r The result reference.
  * \returns The confidence value.
  */
-const int result_get_confidence(result_t r) G_GNUC_WARN_UNUSED_RESULT;
+int result_get_confidence(result_t r) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Sets the confidence value.
@@ -171,7 +171,7 @@ const int result_get_confidence(result_t r) G_GNUC_WARN_UNUSED_RESULT;
  * \param confidence Must be between -1 and 100 inclusive.
  * \returns 0 on success, -1 on error
  */
-int result_set_confidence(result_t r, const int confidence);
+int result_set_confidence(result_t r, int confidence);
 
 /**
  * Gets the subcontractor name.

@@ -274,7 +274,7 @@ int result_set_brief_data_description(result_t _r, const char *brief_data_descri
   return 0;
 }
 
-const int result_get_confidence(result_t _r)
+int result_get_confidence(result_t _r)
 {
   prong_assert(_r != NULL);
   Result *r = (Result *) _r;
@@ -290,7 +290,7 @@ const int result_get_confidence(result_t _r)
   return r->confidence;
 }
 
-int result_set_confidence(result_t _r, const int confidence)
+int result_set_confidence(result_t _r, int confidence)
 {
   prong_assert(_r != NULL);
   Result *r = (Result *) _r;
