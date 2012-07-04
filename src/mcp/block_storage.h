@@ -39,7 +39,7 @@ typedef struct block_store* block_store_t;
  * \warning The user is responsible for calling block_store_close on the returned reference
  * \returns A newly created block store reference
  */
-block_store_t block_store_init() G_GNUC_WARN_UNUSED_RESULT;
+block_store_t block_store_init(void) G_GNUC_WARN_UNUSED_RESULT;
 
 /** 
  * \brief Store blocks 

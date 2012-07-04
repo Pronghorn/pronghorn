@@ -291,7 +291,7 @@ int config_is_null_response(const char *string) G_GNUC_WARN_UNUSED_RESULT;
  * Clears the internal config cache. On the next request it will re-acquire a fresh set of
  * results from the config server.
  */
-void config_clear_cache();
+void config_clear_cache(void);
 
 /**
  * Destroys the config object.
