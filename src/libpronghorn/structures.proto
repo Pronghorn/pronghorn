@@ -13,7 +13,7 @@ message contract
 {
   optional uint32 magic = 1;
   optional string path = 2;
-  repeated sint32 types = 3 [packed=true];
+  repeated uint32 types = 3 [packed=true];
   optional bool is_contiguous = 4;
   optional sint64 absolute_offset = 5;
 	optional sint32 sleep = 6;

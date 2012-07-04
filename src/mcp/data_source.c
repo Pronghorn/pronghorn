@@ -215,7 +215,7 @@ static int mark_node_blocks_complete(struct data_source *ds, GNode * this_node)
 
   prong_assert(ccr != NULL);
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *results = contract_completion_report_get_results(ccr, &num_results);
 
   // If num_results == 0 it means we don't have any actual results => UNIDENTIFIED BLOCK
@@ -1076,7 +1076,7 @@ gboolean range_in_range(block_range_t this_one, block_range_t inside_this)
 
 gboolean block_in_node_ranges(long long int block, GNode * node)
 {
-  int num_results = 0;
+  unsigned int num_results = 0;
 
   struct job_node_data *jdata = (struct job_node_data *) node->data;
 
@@ -1105,7 +1105,7 @@ gboolean range_in_node_ranges(block_range_t the_range, GNode * node)
 
   struct job_node_data *jdata = (struct job_node_data *) node->data;
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *results = contract_completion_report_get_results(jdata->node_report, &num_results);
 
   for (int i = 0; i < num_results; i++)
@@ -1139,7 +1139,7 @@ long long safely_make_block_absolute_offset(GNode* node, unsigned long long bloc
   }
 
   // We need to safely convert - we can only do this if this node has claimed blocks
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t* results = contract_completion_report_get_results(jdata->node_report, &num_results);
   if (num_results == 0)
   {
@@ -1205,7 +1205,7 @@ gboolean node_within_parents_range(GNode * node, unsigned long long block_size)
     return TRUE;
   }
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *results = contract_completion_report_get_results(jdata->node_report, &num_results);
 
   if (num_results == 0)
@@ -1285,7 +1285,7 @@ static GNode *add_ccr_to_job_tree(struct data_source *ds, GNode * parent, contra
   }
   // Now create child nodes for each of the new contracts
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *results = contract_completion_report_get_results(to_add, &num_results);
 
   int res_i = 0;
@@ -1296,7 +1296,7 @@ static GNode *add_ccr_to_job_tree(struct data_source *ds, GNode * parent, contra
     const result_t current_result = results[res_i];
 
     // Add new contracts
-    int num_contracts = 0;
+    unsigned int num_contracts = 0;
     const contract_t *new_contracts = result_get_new_contracts(current_result, &num_contracts);
 
     int cont_i = 0;
@@ -1336,7 +1336,7 @@ static gint unmount_contracts_in_orphan_ccr(contract_completion_report_t cr)
 
   int num_contracts = 0;
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *the_results = contract_completion_report_get_results(cr, &num_results);
 
   if (num_results == 0)
@@ -1346,7 +1346,7 @@ static gint unmount_contracts_in_orphan_ccr(contract_completion_report_t cr)
 
   for (int i = 0; i < num_results; i++)
   {
-    int num_new_contracts = 0;
+    unsigned int num_new_contracts = 0;
     const contract_t *new_contracts = result_get_new_contracts(the_results[i], &num_new_contracts);
 
     if (new_contracts != NULL)
@@ -1529,7 +1529,7 @@ static gboolean node_contains_constant_result(GNode * node)
     return FALSE;
   }
 
-  int result_count = 0;
+  unsigned int result_count = 0;
 
   contract_completion_report_get_results(jdata->node_report, &result_count);
 
@@ -1541,8 +1541,8 @@ static gboolean node_contains_constant_result(GNode * node)
 
   const contract_t orig_contract = contract_completion_report_get_original_contract(jdata->node_report);
 
-  int num_types = 0;
-  const int *contract_types = contract_get_types(orig_contract, &num_types);
+  unsigned int num_types = 0;
+  const unsigned int *contract_types = contract_get_types(orig_contract, &num_types);
 
   if (num_types != 1)
   {
@@ -1639,7 +1639,7 @@ static GNode *split_and_prune_constant_node(GNode * node, unsigned long long max
 
   prong_assert(ccr != NULL);
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *the_results = contract_completion_report_get_results(ccr, &num_results);
 
   // A constant node should only have one result
@@ -1715,7 +1715,7 @@ static int prune_completed_ranges(GNode * starting_node, unsigned long long bloc
 
   struct job_node_data *data = (struct job_node_data *) starting_node->data;
 
-  int num_results;
+  unsigned int num_results;
   const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
   prong_assert(num_results > 0);
@@ -1806,7 +1806,7 @@ static int prune_tree_based_on_new_ccr(struct data_source *ds, GNode * node_cont
   // Setup some vars for convenience
   struct job_node_data *node_data = ((struct job_node_data *) node_containing_new_ccr->data);
 
-  int num_results;
+  unsigned int num_results;
   const result_t *results = contract_completion_report_get_results(node_data->node_report, &num_results);
 
   prong_assert(num_results > 0);
@@ -1834,7 +1834,7 @@ static int print_and_prune_from_node(struct data_source *ds, GNode * node)
 
   struct job_node_data *job_data = (struct job_node_data *) node->data;
 
-  int res_count = 0;
+  unsigned int res_count = 0;
   const result_t *results = contract_completion_report_get_results(job_data->node_report, &res_count);
 
   prong_assert(res_count > 0 && results != NULL);
@@ -2020,7 +2020,7 @@ static int data_source_handle_incoming_contract_completion_report(data_source_t 
 
   const contract_t original_contract = contract_completion_report_get_original_contract(cr);
 
-  int results_count;
+  unsigned int results_count;
   const result_t *results = contract_completion_report_get_results(cr, &results_count);
 
   if ((original_contract == NULL) && (results_count == 0))

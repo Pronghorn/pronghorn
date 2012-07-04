@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     }
     printf("Txed: %s\n", input_string);
 
-    int recvsize;
+    unsigned int recvsize;
     const char *recv = transport_sendrecv(transport, input_string, strlen(input_string) + 1, NULL, &recvsize);
 
     printf("Recv: %s\n", recv);

@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  int size;
+  unsigned int size;
   const char *everything = config_get_all_values(&size);
 
   printf("%s\n", everything);

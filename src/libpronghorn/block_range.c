@@ -36,7 +36,7 @@
  */
 static const unsigned int BLOCK_RANGE_MAGIC = 0xFA044ABE;
 
-block_range_t block_range_init(const char *initial_values, const int initial_values_size)
+block_range_t block_range_init(const char *initial_values, unsigned int initial_values_size)
 {
   BlockRange temp = BLOCK_RANGE__INIT;
   BlockRange *b = (BlockRange *) g_malloc(sizeof(BlockRange));
@@ -69,7 +69,7 @@ block_range_t block_range_init(const char *initial_values, const int initial_val
   return (block_range_t) b;
 }
 
-char *block_range_serialise(block_range_t _b, int *output_data_size)
+char *block_range_serialise(block_range_t _b, unsigned int *output_data_size)
 {
   prong_assert(_b != NULL);
   BlockRange *b = (BlockRange *) _b;
@@ -86,7 +86,7 @@ char *block_range_serialise(block_range_t _b, int *output_data_size)
 
 block_range_t block_range_clone(block_range_t _b)
 {
-  int size;
+  unsigned int size;
   char *b_serialised = block_range_serialise(_b, &size);
 
   if (b_serialised == NULL)

@@ -139,7 +139,7 @@ void dfrws_collect_child_data(GNode * node, GNode * print_tree)
   {
     prong_assert(child->data != NULL);
     struct job_node_data *data = (struct job_node_data *) child->data;
-    int num_results = 0;
+    unsigned int num_results = 0;
     const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
     prong_assert(num_results > 0);
@@ -317,7 +317,7 @@ void dfrws_print(unsigned long long current_offset, unsigned int block_size, GNo
     return;
   }
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
   prong_assert(num_results > 0);

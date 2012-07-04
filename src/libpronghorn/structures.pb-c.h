@@ -46,7 +46,7 @@ struct  _Contract
   uint32_t magic;
   char *path;
   size_t n_types;
-  int32_t *types;
+  uint32_t *types;
   protobuf_c_boolean has_is_contiguous;
   protobuf_c_boolean is_contiguous;
   protobuf_c_boolean has_absolute_offset;

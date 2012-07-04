@@ -446,7 +446,7 @@ static int process_file(const char *filename, result_t new_result)
     inode_lookup = NULL;
   }
 
-  int num_contracts;
+  unsigned int num_contracts;
   result_get_new_contracts(new_result, &num_contracts);
   if (num_contracts > 0)
   {

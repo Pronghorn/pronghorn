@@ -269,7 +269,7 @@ int config_get_long_long_with_default(const char *group, const char *key, long l
  *
  * \returns The entire configuration value list.
  */
-const char *config_get_all_values(int *size) G_GNUC_WARN_UNUSED_RESULT;
+const char *config_get_all_values(unsigned int *size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Checks whether the response indicates the request was not understood.

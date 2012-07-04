@@ -26,7 +26,7 @@
 
 #include <glib.h>
 
-void prong_stacktrace(const char *file, int line, const char *function, const char *expr);
+void prong_stacktrace(const char *file, unsigned int line, const char *function, const char *expr);
 
 #ifdef DEBUG
 #define prong_assert(expr) do { if G_LIKELY (expr) ; else prong_stacktrace(__FILE__, __LINE__, G_STRFUNC, #expr); } while (0)

@@ -301,9 +301,9 @@ static void make_text_lookup_table(void)
   }
 }
 
-void g_array_append(GArray * array, int val)
+void g_array_append(GArray * array, unsigned int val)
 {
-  int array_val = val;
+  unsigned int array_val = val;
 
   g_array_append_val(array, array_val);
 }

@@ -63,7 +63,7 @@ extern const char *PROCESS_NAME;
  * \param timeout_milliseconds The send timeout in milliseconds
  * \returns 0 on success, -1 on error.
  */
-int logger_init(int logLevel, const char *endpoint, int timeout_milliseconds);
+int logger_init(unsigned int logLevel, const char *endpoint, int timeout_milliseconds);
 
 /**
  * Call this function instead of calling logger_init if you have already initialised your config object.
@@ -95,7 +95,7 @@ int logger_config_init(void);
  * \param new_severity The severity to filter on.
  * \returns 0 on success, -1 on error.
  */
-int set_log_level(const int new_severity);
+int set_log_level(unsigned int new_severity);
 
 /**
  * Returns the severity value as a string.
@@ -103,7 +103,7 @@ int set_log_level(const int new_severity);
  * \param severity The severity value
  * \returns A string (do not free)
  */
-const char *log_get_severity_string(int severity) G_GNUC_WARN_UNUSED_RESULT;
+const char *log_get_severity_string(unsigned int severity) G_GNUC_WARN_UNUSED_RESULT;
 
 #define debug_log(...) debug_log_real("[" G_STRLOC "] " __VA_ARGS__)
 

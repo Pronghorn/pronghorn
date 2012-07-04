@@ -72,7 +72,7 @@ int is_constant_node(GNode * node)
   prong_assert(node->data != NULL);
   struct job_node_data *data = (struct job_node_data *) node->data;
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
   prong_assert(num_results > 0);
@@ -83,8 +83,8 @@ int is_constant_node(GNode * node)
     return 0;
   }
 
-  int num_types;
-  const int *types = contract_get_types(data->node_contract, &num_types);
+  unsigned int num_types;
+  const unsigned int *types = contract_get_types(data->node_contract, &num_types);
 
   for (int i = 0; i < num_types; i++)
   {

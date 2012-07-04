@@ -57,7 +57,7 @@ static char *buffer = NULL;
 /** The size of the internal buffer */
 static int buffer_size = 0;
 
-int logger_init(int _logLevel, const char *endpoint, int timeout_milliseconds)
+int logger_init(unsigned int _logLevel, const char *endpoint, int timeout_milliseconds)
 {
   prong_assert(logLevel >= LOG_SEVERITY_DEBUG);
   prong_assert(logLevel <= LOG_SEVERITY_SEVERE);
@@ -143,7 +143,7 @@ int logger_config_init(void)
   return 0;
 }
 
-int set_log_level(const int new_level)
+int set_log_level(unsigned int new_level)
 {
   if ((new_level < LOG_SEVERITY_DEBUG) || (new_level > LOG_SEVERITY_SEVERE))
   {
@@ -156,7 +156,7 @@ int set_log_level(const int new_level)
   return 0;
 }
 
-const char *log_get_severity_string(int severity)
+const char *log_get_severity_string(unsigned int severity)
 {
   switch (severity)
   {
@@ -252,7 +252,7 @@ static int vlog(int severity, const char *format, va_list ap)
   log_set_timestamp(log, timestamp.tv_sec, timestamp.tv_usec);
   log_set_message(log, buffer);
 
-  int size;
+  unsigned int size;
   char *s = log_serialise(log, &size);
 
   log_close(log);

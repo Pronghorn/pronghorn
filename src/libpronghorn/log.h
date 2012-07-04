@@ -47,7 +47,7 @@ typedef struct log* log_t;
  * \param initial_values_size the size of the initial_values_buffer
  * \returns an initialised log_t reference or NULL on error
  */
-log_t log_init(const char *initial_values, const int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
+log_t log_init(const char *initial_values, const unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Returns the log reference as a serialised buffer.
@@ -58,7 +58,7 @@ log_t log_init(const char *initial_values, const int initial_values_size) G_GNUC
  * \param output_data_size the size of the output buffer
  * \returns the output buffer, or NULL on error.
  */
-char *log_serialise(log_t l, int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
+char *log_serialise(log_t l, unsigned int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Clones a log reference.
@@ -104,7 +104,7 @@ int log_get_severity(log_t l) G_GNUC_WARN_UNUSED_RESULT;
  * \param severity The severity of the message. One of LOG_SEVERITY_{DEBUG,INFO,WARNING,ERROR,SEVERE}
  * \returns 0 on success, -1 on error.
  */
-int log_set_severity(log_t l, const int severity);
+int log_set_severity(log_t l, const unsigned int severity);
 
 /**
  * Gets the message attached to this log message.

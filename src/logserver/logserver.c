@@ -151,7 +151,7 @@ int main(int argc, char **argv)
 
   while (quit == 0)
   {
-    int logmsg_size;
+    unsigned int logmsg_size;
 
     const char *logmsg = transport_recv(listen_transport, NULL, &logmsg_size);
 

@@ -47,7 +47,7 @@ typedef struct contract* contract_t;
  * \param initial_values_size the size of the initial_values_buffer
  * \returns an initialised contract_t reference or NULL on error
  */
-contract_t contract_init(const char *initial_values, const int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
+contract_t contract_init(const char *initial_values, const unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Returns the contract reference as a serialised buffer.
@@ -58,7 +58,7 @@ contract_t contract_init(const char *initial_values, const int initial_values_si
  * \param output_data_size the size of the output buffer
  * \returns the output buffer, or NULL on error.
  */
-char *contract_serialise(contract_t c, int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
+char *contract_serialise(contract_t c, unsigned int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Clones a contract reference.
@@ -94,7 +94,7 @@ int contract_set_path(contract_t c, const char *path);
  * \param num_types The number of types in the returned array (may not be NULL)
  * \returns An array of type codes.
  */
-const int *contract_get_types(contract_t c, int *num_types) G_GNUC_WARN_UNUSED_RESULT;
+const unsigned int *contract_get_types(contract_t c, unsigned int *num_types) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Deletes the array of types.
@@ -111,7 +111,7 @@ int contract_delete_types(contract_t c);
  * \param type The type of data this contract should be processes as.
  * \returns 0 on success, -1 on error
  */
-int contract_add_type(contract_t c, int type);
+int contract_add_type(contract_t c, unsigned int type);
 
 /**
  * Returns whether the contract is over a contiguous allocated area.
@@ -128,7 +128,7 @@ int contract_is_contiguous(contract_t c) G_GNUC_WARN_UNUSED_RESULT;
  * \param is_contiguous 1 if contiguous, 0 if not.
  * \returns 0 is success, -1 on error
  */
-int contract_set_contiguous(contract_t c, int is_contiguous);
+int contract_set_contiguous(contract_t c, unsigned int is_contiguous);
 
 /**
  * Returns the absolute offset this contract exists relative to the 

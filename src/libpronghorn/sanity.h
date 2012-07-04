@@ -31,6 +31,6 @@
  *
  * \returns 1 if all dependencies are met, 0 otherwise
  */
-int are_all_dependencies_met(void) G_GNUC_WARN_UNUSED_RESULT;
+unsigned int are_all_dependencies_met(void) G_GNUC_WARN_UNUSED_RESULT;
 
 #endif

@@ -74,7 +74,7 @@ static void node_destroy_wrapper(GNode* node, gpointer data)
 void basic_print(unsigned long long current_offset, unsigned int block_size, GNode * node)
 {
   struct job_node_data *data = (struct job_node_data *) node->data;
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
   prong_assert(num_results > 0);

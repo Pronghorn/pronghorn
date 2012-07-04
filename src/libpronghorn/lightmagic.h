@@ -213,6 +213,6 @@ const unsigned int lightmagic_int_value(const char *text_representation) G_GNUC_
  * \param array The GArray to append to.
  * \param val The value to append to it.
  */
-void g_array_append(GArray * array, int val);
+void g_array_append(GArray * array, unsigned int val);
 
 #endif

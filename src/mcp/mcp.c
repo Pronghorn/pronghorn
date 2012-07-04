@@ -155,7 +155,7 @@ int respond_with_null_contract(transport_t transport)
   contract_set_path(a_contract, "");
   contract_set_sleep_time(a_contract, -1);
 
-  int contract_string_size;
+  unsigned int contract_string_size;
   char *contract_string = contract_serialise(a_contract, &contract_string_size);
 
   if (transport_send(transport, contract_string, &contractor_exited, contract_string_size) < 0)
@@ -300,7 +300,7 @@ int respond_with_contract(transport_t transport, const contract_t contract)
   prong_assert(transport != NULL);
   prong_assert(contract != NULL);
 
-  int contract_string_size;
+  unsigned int contract_string_size;
   char *contract_string = contract_serialise(contract, &contract_string_size);
 
   if (transport_send(transport, contract_string, NULL, contract_string_size) < 0)
@@ -362,7 +362,7 @@ int contract_processing_loop(transport_t transport, data_source_t source)
 
   contract_completion_report_t current_contract_completion_report = NULL;
 
-  int from_contractor_size = 0;
+  unsigned int from_contractor_size = 0;
   const char *from_contractor = NULL;
   contract_t next_contract = NULL;
 

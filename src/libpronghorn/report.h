@@ -51,7 +51,7 @@ typedef struct contract_completion_report* contract_completion_report_t;
  * \param initial_values_size the size of the initial_values_buffer
  * \returns an initialised contract_completion_report_t reference or NULL on error
  */
-contract_completion_report_t contract_completion_report_init(const char *initial_values, const int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
+contract_completion_report_t contract_completion_report_init(const char *initial_values, unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Returns the contract_completion_report reference as a serialised buffer.
@@ -62,7 +62,7 @@ contract_completion_report_t contract_completion_report_init(const char *initial
  * \param output_data_size the size of the output buffer
  * \returns the output buffer, or NULL on error.
  */
-char *contract_completion_report_serialise(contract_completion_report_t r, int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
+char *contract_completion_report_serialise(contract_completion_report_t r, unsigned int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Clones a contract_completion_report reference.
@@ -83,7 +83,7 @@ contract_completion_report_t contract_completion_report_clone(contract_completio
  * \param num_results The number of elements in the returned array
  * \returns The array of results references.
  */
-const result_t *contract_completion_report_get_results(contract_completion_report_t r, int *num_results);
+const result_t *contract_completion_report_get_results(contract_completion_report_t r, unsigned int *num_results);
 
 /**
  * Adds a result to the contract_completion_report reference.

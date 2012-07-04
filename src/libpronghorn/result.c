@@ -45,7 +45,7 @@
  */
 static const unsigned int RESULT_MAGIC = 0x5067EAB7;
 
-result_t result_init(const char *initial_values, const int initial_values_size)
+result_t result_init(const char *initial_values, unsigned int initial_values_size)
 {
   // Some compatibility testing
   // If this assert fails then the protobuf structure is invalid against this
@@ -144,7 +144,7 @@ void remove_duplicate_contracts(Result* r)
 
 }
 
-char *result_serialise(result_t _r, int *output_data_size)
+char *result_serialise(result_t _r, unsigned int *output_data_size)
 {
   prong_assert(_r != NULL);
   Result *r = (Result *) _r;
@@ -163,7 +163,7 @@ char *result_serialise(result_t _r, int *output_data_size)
 
 result_t result_clone(result_t _r)
 {
-  int size;
+  unsigned int size;
   char *r_serialised = result_serialise(_r, &size);
 
   if (r_serialised == NULL)
@@ -335,7 +335,7 @@ int result_set_subcontractor_name(result_t _r, const char *subcontractor_name)
   return 0;
 }
 
-const contract_t *result_get_new_contracts(result_t _r, int *new_contracts_count)
+const contract_t *result_get_new_contracts(result_t _r, unsigned int *new_contracts_count)
 {
   prong_assert(_r != NULL);
   Result *r = (Result *) _r;

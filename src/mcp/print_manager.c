@@ -98,7 +98,7 @@ static gboolean debug_print_node(GNode * node, gpointer p_first)
   printf("%s - Path = %s\n", prefix, contract_get_path(data->node_contract));
   printf("%s - Parent = %lld\n", prefix, data->parent_absolute_offset);
 
-  int num_results = 0;
+  unsigned int num_results = 0;
   const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
   prong_assert(num_results > 0);
@@ -318,7 +318,7 @@ static void print_and_process_tree(struct print_manager *pm, GNode * node)
 
   struct job_node_data *data = (struct job_node_data *) node->data;
 
-  int num_results;
+  unsigned int num_results;
   const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
   prong_assert(num_results > 0);
@@ -338,7 +338,7 @@ static void print_and_process_tree(struct print_manager *pm, GNode * node)
     printf("Print manager has printed up to offset %lld, but the node passed has offset %lld\n", pm->current_offset * pm->block_size,
            contract_get_absolute_offset(data->node_contract) * pm->block_size);
     printf("I *should* assert and blow up, but it's commented out for now\n");
-    int num_results = 0;
+    unsigned int num_results = 0;
     const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
     prong_assert(num_results > 0);
@@ -565,7 +565,7 @@ printf("Claiming range %llu-%llu\n", p, l);
 
     cont_node->owner_offset = contract_get_absolute_offset(data->node_contract);
 
-    int num_results;
+    unsigned int num_results;
     const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
     prong_assert(results != NULL);
@@ -593,7 +593,7 @@ static gboolean divide_abs_off_and_record_block_ranges(GNode * node, struct prin
     abs_off = abs_off / pm->block_size;
     contract_set_absolute_offset(data->node_contract, abs_off);
 
-    int num_results;
+    unsigned int num_results;
     const result_t *results = contract_completion_report_get_results(data->node_report, &num_results);
 
     prong_assert(results != NULL);

@@ -39,7 +39,7 @@ typedef struct block_range* block_range_t;
  * \param initial_values_size the size of the initial_values_buffer
  * \returns an initialised block_range_t reference or NULL on error
  */
-block_range_t block_range_init(const char *initial_values, const int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
+block_range_t block_range_init(const char *initial_values, unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Returns the block_range reference as a serialised buffer.
@@ -50,7 +50,7 @@ block_range_t block_range_init(const char *initial_values, const int initial_val
  * \param output_data_size the size of the output buffer
  * \returns the output buffer, or NULL on error.
  */
-char *block_range_serialise(block_range_t b, int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
+char *block_range_serialise(block_range_t b, unsigned int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Clones a block_range reference.

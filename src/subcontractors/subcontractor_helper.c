@@ -81,7 +81,7 @@ int run_main_subcontactor_loop(void)
   debug_log("Sub contractor is starting its main loop");
 
   contract_t new_contract = NULL;
-  int msg_size;
+  unsigned int msg_size;
   const char *msg = transport_recv(contractor_upstream_transport, NULL, &msg_size);
 
   debug_log("Sub got its first message!");
@@ -132,7 +132,7 @@ int run_main_subcontactor_loop(void)
     }
 
     // We need to pass this back to the upstream transport!
-    int to_send_size;
+    unsigned int to_send_size;
     char *to_send = contract_completion_report_serialise(ccr, &to_send_size);
 
     debug_log("Sending result back to contractor!");

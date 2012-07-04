@@ -43,7 +43,7 @@
  */
 static const unsigned int CONTRACT_MAGIC = 0xC0F71A6E;
 
-contract_t contract_init(const char *initial_values, const int initial_values_size)
+contract_t contract_init(const char *initial_values, unsigned int initial_values_size)
 {
   Contract temp = CONTRACT__INIT;
   Contract *c = (Contract *) g_malloc(sizeof(Contract));
@@ -69,7 +69,7 @@ contract_t contract_init(const char *initial_values, const int initial_values_si
     if (unpacked_contract->n_types > 0)
     {
       c->n_types = unpacked_contract->n_types;
-      c->types = (int *) g_malloc(unpacked_contract->n_types * sizeof(*(unpacked_contract->types)));
+      c->types = (unsigned int *) g_malloc(unpacked_contract->n_types * sizeof(*(unpacked_contract->types)));
       memcpy(c->types, unpacked_contract->types, unpacked_contract->n_types * sizeof(*(unpacked_contract->types)));
     }
     c->has_is_contiguous = unpacked_contract->has_is_contiguous;
@@ -85,7 +85,7 @@ contract_t contract_init(const char *initial_values, const int initial_values_si
   return (contract_t) c;
 }
 
-char *contract_serialise(contract_t _c, int *output_data_size)
+char *contract_serialise(contract_t _c, unsigned int *output_data_size)
 {
   prong_assert(_c != NULL);
   Contract *c = (Contract *) _c;
@@ -102,7 +102,7 @@ char *contract_serialise(contract_t _c, int *output_data_size)
 
 contract_t contract_clone(contract_t _c)
 {
-  int size;
+  unsigned int size;
   char *c_serialised = contract_serialise(_c, &size);
 
   if (c_serialised == NULL)
@@ -146,7 +146,7 @@ int contract_set_path(contract_t _c, const char *path)
   return 0;
 }
 
-const int *contract_get_types(contract_t _c, int *num_types)
+const unsigned int *contract_get_types(contract_t _c, unsigned int *num_types)
 {
   prong_assert(_c != NULL);
   Contract *c = (Contract *) _c;
@@ -174,14 +174,14 @@ int contract_delete_types(contract_t _c)
   return 0;
 }
 
-int contract_add_type(contract_t _c, int type)
+int contract_add_type(contract_t _c, unsigned int type)
 {
   prong_assert(_c != NULL);
   Contract *c = (Contract *) _c;
 
   prong_assert(c->magic == CONTRACT_MAGIC);
 
-  c->types = (int *) g_realloc(c->types, sizeof(int) * (c->n_types + 1));
+  c->types = (unsigned int *) g_realloc(c->types, sizeof(int) * (c->n_types + 1));
   c->types[c->n_types] = type;
   c->n_types++;
 
@@ -203,7 +203,7 @@ int contract_is_contiguous(contract_t _c)
   return c->is_contiguous;
 }
 
-int contract_set_contiguous(contract_t _c, int is_contiguous)
+int contract_set_contiguous(contract_t _c, unsigned int is_contiguous)
 {
   prong_assert(_c != NULL);
   Contract *c = (Contract *) _c;

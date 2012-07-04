@@ -32,7 +32,7 @@
  *
  * \returns 1 if ok, 0 if not ok
  */
-static int check_zmq()
+static unsigned int check_zmq()
 {
   const int MAJOR_MIN = 2;
   const int MINOR_MIN = 2;
@@ -83,14 +83,14 @@ ZMQ_FAIL:
  *
  * Check that the user_allow_other setting is set in /etc/fuse.conf
  */
-static int check_fuse()
+static unsigned int check_fuse()
 {
   /** \todo This function requires implementation */
   // TODO This function requires implementation
   return 1;
 }
 
-int are_all_dependencies_met()
+unsigned int are_all_dependencies_met()
 {
   if (check_zmq() != 1)
   {

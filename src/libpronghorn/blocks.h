@@ -82,7 +82,7 @@ int block_add_byte_range(unsigned long long start_byte, unsigned long long end_b
  * \param block_size The block size
  * \returns 0 on success, -1 on error
  */
-int block_add_block(unsigned long long block, int block_size);
+int block_add_block(unsigned long long block, unsigned int block_size);
 
 /**
  * Adds a block range to the block manager.
@@ -99,7 +99,7 @@ int block_add_block(unsigned long long block, int block_size);
  * \param block_size The size of the blocks
  * \returns 0 on success, -1 on error
  */
-int block_add_block_range(unsigned long long start_block, unsigned long long end_block, int block_size);
+int block_add_block_range(unsigned long long start_block, unsigned long long end_block, unsigned int block_size);
 
 /**
  * Finishes the block transformation.

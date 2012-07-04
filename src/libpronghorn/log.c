@@ -41,7 +41,7 @@
  */
 static const unsigned int LOG_MAGIC = 0x77E3CFE2;
 
-log_t log_init(const char *initial_values, const int initial_values_size)
+log_t log_init(const char *initial_values, unsigned int initial_values_size)
 {
   Log temp = LOG__INIT;
   Log *l = (Log *) g_malloc(sizeof(Log));
@@ -78,7 +78,7 @@ log_t log_init(const char *initial_values, const int initial_values_size)
   return (log_t) l;
 }
 
-char *log_serialise(log_t _l, int *output_data_size)
+char *log_serialise(log_t _l, unsigned int *output_data_size)
 {
   prong_assert(_l != NULL);
   Log *l = (Log *) _l;
@@ -95,7 +95,7 @@ char *log_serialise(log_t _l, int *output_data_size)
 
 log_t log_clone(log_t _l)
 {
-  int size;
+  unsigned int size;
   char *l_serialised = log_serialise(_l, &size);
 
   if (l_serialised == NULL)
@@ -154,7 +154,7 @@ int log_get_severity(log_t _l)
   return l->severity;
 }
 
-int log_set_severity(log_t _l, const int severity)
+int log_set_severity(log_t _l, unsigned int severity)
 {
   prong_assert(_l != NULL);
   Log *l = (Log *) _l;

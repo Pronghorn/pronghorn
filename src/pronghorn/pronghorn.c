@@ -346,7 +346,7 @@ static void serve_config(GKeyFile * config, transport_t transport)
 
   while ((quit == 0) && (mcp_pid > 0) && (logserver_pid > 0))
   {
-    int size;
+    unsigned int size;
     const char *request = transport_recv(transport, &quitting_time, &size);
 
     if (request == NULL)

@@ -45,7 +45,7 @@
  */
 static const unsigned int REPORT_MAGIC = 0x6473B7C7;
 
-contract_completion_report_t contract_completion_report_init(const char *initial_values, const int initial_values_size)
+contract_completion_report_t contract_completion_report_init(const char *initial_values, unsigned int initial_values_size)
 {
   Report temp = REPORT__INIT;
   Report *r = (Report *) g_malloc(sizeof(Report));
@@ -88,7 +88,7 @@ contract_completion_report_t contract_completion_report_init(const char *initial
   return (contract_completion_report_t) r;
 }
 
-char *contract_completion_report_serialise(contract_completion_report_t _r, int *output_data_size)
+char *contract_completion_report_serialise(contract_completion_report_t _r, unsigned int *output_data_size)
 {
   prong_assert(_r != NULL);
   Report *r = (Report *) _r;
@@ -105,7 +105,7 @@ char *contract_completion_report_serialise(contract_completion_report_t _r, int 
 
 contract_completion_report_t contract_completion_report_clone(contract_completion_report_t _r)
 {
-  int size;
+  unsigned int size;
   char *r_serialised = contract_completion_report_serialise(_r, &size);
 
   if (r_serialised == NULL)
@@ -120,7 +120,7 @@ contract_completion_report_t contract_completion_report_clone(contract_completio
   return newreport;
 }
 
-const result_t *contract_completion_report_get_results(contract_completion_report_t _r, int *num_results)
+const result_t *contract_completion_report_get_results(contract_completion_report_t _r, unsigned int *num_results)
 {
   prong_assert(_r != NULL);
   Report *r = (Report *) _r;

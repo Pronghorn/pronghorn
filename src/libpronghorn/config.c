@@ -95,8 +95,7 @@ int config_set(const char *group, const char *key, const char *value)
 
   char *send_string = g_strdup_printf("%s.%s=%s", group, key, value);
 
-  int recvsize;
-
+  unsigned int recvsize;
   const char *recv = transport_sendrecv(configserver_endpoint, send_string, strlen(send_string) + 1, NULL, &recvsize);
 
   g_free(send_string);
@@ -240,7 +239,7 @@ char *expand_variables(GKeyFile * config, char *string)
 static int config_get_direct(const char *group, const char *key, char **value)
 {
   char *send_string = g_strdup_printf("%s.%s", group, key);
-  int recvsize;
+  unsigned int recvsize;
   const char *recv = transport_sendrecv(configserver_endpoint, send_string, strlen(send_string) + 1, NULL, &recvsize);
 
   g_free(send_string);
@@ -301,7 +300,7 @@ int config_get(const char *group, const char *key, char **value)
   if (cache == NULL)
   {
     cache = g_key_file_new();
-    int size;
+    unsigned int size;
     const char *vals = config_get_all_values(&size);
 
     if (vals == NULL)
@@ -506,7 +505,7 @@ int config_get_long_long_with_default(const char *group, const char *key, long l
   return 0;
 }
 
-const char *config_get_all_values(int *size)
+const char *config_get_all_values(unsigned int *size)
 {
   if (configserver_endpoint == NULL)
   {

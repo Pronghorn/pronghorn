@@ -309,7 +309,7 @@ int main(int argc, char *argv[])
   transport_set_recv_timeout(transport, timeout);
   debug_log("Using %li for timeout to subcontractor", timeout);
 
-  int contract_string_size;
+  unsigned int contract_string_size;
   contract_t c = contract_init(NULL, 0);
 
   contract_set_path(c, input_file);
@@ -330,7 +330,7 @@ int main(int argc, char *argv[])
 
   info_log("Sending message");
 
-  int subcontractor_result_msg_size;
+  unsigned int subcontractor_result_msg_size;
   const char *subcontractor_result_msg = transport_sendrecv(transport, contract_string, contract_string_size, &child_pid, &subcontractor_result_msg_size);
 
   if (subcontractor_result_msg == NULL)
@@ -372,7 +372,7 @@ int main(int argc, char *argv[])
 
   info_log("=====================");
   info_log("Results: ");
-  int results_count;
+  unsigned int results_count;
   const result_t *results = contract_completion_report_get_results(report, &results_count);
 
   c = contract_completion_report_get_original_contract(report);;
@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
     }
 #endif // PRINT_BLOCK_ARRAY
 
-    int new_contracts_count;
+    unsigned int new_contracts_count;
 
 #if SIMPLE_CONTRACT_ENUMERATION
     result_get_new_contracts(r, &new_contracts_count);

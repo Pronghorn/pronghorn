@@ -65,7 +65,7 @@ typedef struct transport* transport_t;
  * \param endpoint_address the address used to connect to the server
  * \return a transport_t reference or NULL to indicate an error
  */
-transport_t transport_init(const int type, const char *const endpoint_address) G_GNUC_WARN_UNUSED_RESULT;
+transport_t transport_init(unsigned int type, const char *const endpoint_address) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Sets the transmission timeout for the socket.
@@ -110,7 +110,7 @@ int transport_set_recv_timeout(transport_t transport, long milliseconds);
  * \return 0 on success, -1 on error. errno is set.
  * \todo This should probably be a G_GNUC_WARN_UNUSED_RESULT 
  */
-int transport_send(transport_t transport, const char *const tx_data, volatile sig_atomic_t * pid, const int tx_data_size);
+int transport_send(transport_t transport, const char *const tx_data, volatile sig_atomic_t * pid, unsigned int tx_data_size);
 
 /**
  * Receives a message from a remote endpoint.
@@ -130,7 +130,7 @@ int transport_send(transport_t transport, const char *const tx_data, volatile si
  * \param rx_data_size will be populated with the size of the buffer returned in bytes
  * \return The buffer received, or NULL on error.
  */
-const char *transport_recv(transport_t transport, volatile sig_atomic_t * pid, int *rx_data_size) G_GNUC_WARN_UNUSED_RESULT;
+const char *transport_recv(transport_t transport, volatile sig_atomic_t * pid, unsigned int *rx_data_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Sends and receives a message with a remote endpoint.
@@ -153,7 +153,7 @@ const char *transport_recv(transport_t transport, volatile sig_atomic_t * pid, i
  * \param rx_data_size Returns the size of the received buffer
  * \return The buffer received, or NULL on error.
  */
-const char *transport_sendrecv(transport_t transport, const char *const tx_data, const int tx_data_size, volatile sig_atomic_t * pid, int *rx_data_size) G_GNUC_WARN_UNUSED_RESULT;
+const char *transport_sendrecv(transport_t transport, const char *const tx_data, const unsigned int tx_data_size, volatile sig_atomic_t * pid, unsigned int *rx_data_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Closes the transport layer.

@@ -930,7 +930,7 @@ int send_shutdown_message_to_subcontractors(void)
   contract_t a_contract = contract_init(NULL, 0);
 
   contract_set_path(a_contract, "");
-  int contract_serialised_size;
+  unsigned int contract_serialised_size;
   char *contract_serialised = contract_serialise(a_contract, &contract_serialised_size);
 
   GSList *curr = subcontractor_list;
@@ -952,7 +952,7 @@ int send_shutdown_message_to_subcontractors(void)
       debug_log("Sent a shutdown message to a sub contractors, waiting for junk back.");
 
       // We don't actually care what this is...
-      int null_msg_size;
+      unsigned int null_msg_size;
       const char *null_msg = transport_recv(to_shutdown->subcontractor_transport, &(to_shutdown->pid), &null_msg_size);
 
       if (null_msg == NULL)
@@ -1383,7 +1383,7 @@ contract_completion_report_t process_with_single_subcontractor(struct subcontrac
   // This is what we'll hope to get back
   contract_completion_report_t single_type_ccr = NULL;
 
-  int contract_msg_to_send_size = 0;
+  unsigned int contract_msg_to_send_size = 0;
   char *contract_msg_to_send = contract_msg_to_send = contract_serialise(single_scon_contract, &contract_msg_to_send_size);
 
 
@@ -1401,7 +1401,7 @@ contract_completion_report_t process_with_single_subcontractor(struct subcontrac
   unhandled_subcontractor_exit_signal = 0;
   unhandled_subcontractor_exit_normal = 0;
 
-  int subcontractor_ccr_msg_size = 0;
+  unsigned int subcontractor_ccr_msg_size = 0;
   const char *subcontractor_ccr_msg =
     transport_sendrecv(using_this_subcontractor->subcontractor_transport, contract_msg_to_send, contract_msg_to_send_size, &(using_this_subcontractor->pid), &subcontractor_ccr_msg_size);
   g_free(contract_msg_to_send);
@@ -1449,7 +1449,7 @@ contract_completion_report_t assess_single_subcontractor_ccr(const contract_comp
     return NULL;
   }
 
-  int res_count = 0;
+  unsigned int res_count = 0;
   const result_t *results = contract_completion_report_get_results(assess_me, &res_count);
 
   // Sanity
@@ -1574,7 +1574,7 @@ contract_completion_report_t aggregate_results(GSList * results, contract_t orig
     contract_completion_report_t current_completion_report = (contract_completion_report_t) curr->data;
 
     // Collect the results and add them to our aggregated report ("to_return")
-    int num_results;
+    unsigned int num_results;
     const result_t *results = contract_completion_report_get_results(current_completion_report, &num_results);
 
     for (j = 0; j < num_results; j++)
@@ -1606,9 +1606,9 @@ gboolean subcontractor_supports_contract_type(struct subcontractor * scon, contr
     return TRUE;
   }
 
-  int num_types = 0;
+  unsigned int num_types = 0;
 
-  const int *types = contract_get_types(to_process, &num_types);
+  const unsigned int *types = contract_get_types(to_process, &num_types);
 
   if (types == NULL || num_types == 0)
     return FALSE;
@@ -1772,9 +1772,9 @@ contract_completion_report_t process_contract(contract_t to_process)
   contract_completion_report_set_original_contract(to_return, to_process);
 
   // Checking for any data types that we don't support
-  int requested_types_count = 0;
+  unsigned int requested_types_count = 0;
 
-  const int *requested_types = contract_get_types(to_process, &requested_types_count);
+  const unsigned int *requested_types = contract_get_types(to_process, &requested_types_count);
 
   for (int i = 0; i < requested_types_count; i++)
   {
@@ -1882,7 +1882,7 @@ int main_processing_loop(transport_t mcp_upstream_transport)
   debug_log("About to send empty contract completion report");
 
   contract_completion_report_t ccr = contract_completion_report_init(NULL, 0);
-  int empty_msg_size;
+  unsigned int empty_msg_size;
   char *empty_msg = contract_completion_report_serialise(ccr, &empty_msg_size);
 
   contract_completion_report_close(ccr);
@@ -1902,7 +1902,7 @@ int main_processing_loop(transport_t mcp_upstream_transport)
 
   while (finished == 0 && sigterm_received == 0)
   {
-    int msg_size;
+    unsigned int msg_size;
 
     const char *msg = transport_recv(mcp_upstream_transport, NULL, &msg_size);
 
@@ -1971,7 +1971,7 @@ int main_processing_loop(transport_t mcp_upstream_transport)
     debug_log("Responding back to MCP with contract completion report");
     contract_close(new_contract);
 
-    int msg_to_send_size;
+    unsigned int msg_to_send_size;
     char *msg_to_send = contract_completion_report_serialise(contract_report, &msg_to_send_size);
 
     contract_completion_report_close(contract_report);

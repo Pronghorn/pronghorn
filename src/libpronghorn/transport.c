@@ -251,7 +251,7 @@ static int init_pull(struct transport *t, const char *const server_address)
   return 0;
 }
 
-transport_t transport_init(const int type, const char *const server_address)
+transport_t transport_init(unsigned int type, const char *const server_address)
 {
   struct transport *t = (struct transport *) g_malloc(sizeof(struct transport));
 
@@ -391,7 +391,7 @@ int transport_set_recv_timeout(transport_t _t, long milliseconds)
   return 0;
 }
 
-int transport_send(transport_t _t, const char *const tx_data, volatile sig_atomic_t * pid, const int tx_data_size)
+int transport_send(transport_t _t, const char *const tx_data, volatile sig_atomic_t * pid, unsigned int tx_data_size)
 {
   struct transport *t = validate(_t);
 
@@ -473,7 +473,7 @@ static int is_data_available(transport_t _t, long milliseconds)
   return 1;
 }
 
-const char *transport_recv(transport_t _t, volatile sig_atomic_t * pid, int *rx_data_size)
+const char *transport_recv(transport_t _t, volatile sig_atomic_t * pid, unsigned int *rx_data_size)
 {
   *rx_data_size = 0;
 
@@ -563,7 +563,7 @@ const char *transport_recv(transport_t _t, volatile sig_atomic_t * pid, int *rx_
   return t->buf;
 }
 
-const char *transport_sendrecv(transport_t _t, const char *const tx_data, const int tx_data_size, volatile sig_atomic_t * pid, int *rx_data_size)
+const char *transport_sendrecv(transport_t _t, const char *const tx_data, unsigned int tx_data_size, volatile sig_atomic_t * pid, unsigned int *rx_data_size)
 {
   if (transport_send(_t, tx_data, pid, tx_data_size) < 0)
   {

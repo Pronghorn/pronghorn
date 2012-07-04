@@ -255,7 +255,7 @@ int block_add_byte_range(unsigned long long start_byte, unsigned long long end_b
   return 0;
 }
 
-int block_add_block(unsigned long long block, int size)
+int block_add_block(unsigned long long block, unsigned int size)
 {
   if (block_range_tree == NULL)
   {
@@ -267,7 +267,7 @@ int block_add_block(unsigned long long block, int size)
   return 0;
 }
 
-int block_add_block_range(unsigned long long start_block, unsigned long long end_block, int bsize)
+int block_add_block_range(unsigned long long start_block, unsigned long long end_block, unsigned int bsize)
 {
   if (block_range_tree == NULL)
   {

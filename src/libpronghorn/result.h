@@ -54,7 +54,7 @@ typedef struct result* result_t;
  * \param initial_values_size the size of the initial_values_buffer
  * \returns an initialised result_t reference or NULL on error
  */
-result_t result_init(const char *initial_values, const int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
+result_t result_init(const char *initial_values, const unsigned int initial_values_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Returns the result reference as a serialised buffer.
@@ -65,7 +65,7 @@ result_t result_init(const char *initial_values, const int initial_values_size) 
  * \param output_data_size the size of the output buffer
  * \returns the output buffer, or NULL on error.
  */
-char *result_serialise(result_t r, int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
+char *result_serialise(result_t r, unsigned int *output_data_size) G_GNUC_WARN_UNUSED_RESULT;
 
 /**
  * Clones a result reference.
@@ -199,7 +199,7 @@ int result_set_subcontractor_name(result_t r, const char *subcontractor_name);
  * \param new_contracts_count The number of elements in the returned array.
  * \returns The array of new contracts
  */
-const contract_t *result_get_new_contracts(result_t r, int *new_contracts_count);
+const contract_t *result_get_new_contracts(result_t r, unsigned int *new_contracts_count);
 
 /**
  * Adds a contract to the result reference.
